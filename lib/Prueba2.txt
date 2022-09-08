@@ -1,0 +1,155 @@
+import 'package:flutter/material.dart';
+
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+enum serviceQuality { Amazing, Good, Ok }
+
+class _HomePageState extends State<HomePage> {
+  // TODO: completar todo lo necesario
+  var costController = TextEditingController();
+  serviceQuality? selected = serviceQuality.Amazing;
+  bool switched = false;
+  double total = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+          title: Text('Tip time'),
+          backgroundColor: Color.fromARGB(255, 4, 131, 9)),
+      body: ListView(
+        children: [
+          SizedBox(height: 14),
+          ListTile(
+            leading:
+                Icon(Icons.add_business, color: Color.fromARGB(255, 4, 131, 9)),
+            title: Padding(
+              padding: EdgeInsets.only(right: 24),
+              child: TextField(
+                  strutStyle: StrutStyle(),
+                  controller: costController,
+                  decoration: InputDecoration(
+                    labelStyle:
+                        TextStyle(color: Color.fromARGB(255, 4, 131, 9)),
+                    focusedBorder: new OutlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Color.fromARGB(255, 4, 131, 9), width: 3),
+                    ),
+                    label: Text("Cost of Service",
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                  )),
+            ),
+          ),
+          ListTile(
+            leading:
+                Icon(Icons.room_service, color: Color.fromARGB(255, 4, 131, 9)),
+            title: Text("How was the service?"),
+          ),
+          ListTile(
+            title: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                RadioListTile<serviceQuality>(
+                  title: Text("Amazing (20%)"),
+                  value: serviceQuality.Amazing,
+                  groupValue: selected,
+                  onChanged: (serviceQuality? value) {
+                    setState(() {
+                      selected = value;
+                    });
+                  },
+                ),
+                RadioListTile<serviceQuality>(
+                  title: Text("Good (18%)"),
+                  value: serviceQuality.Good,
+                  groupValue: selected,
+                  onChanged: (serviceQuality? value) {
+                    setState(() {
+                      selected = value;
+                    });
+                  },
+                ),
+                RadioListTile<serviceQuality>(
+                  title: Text("Ok (15%)"),
+                  value: serviceQuality.Ok,
+                  groupValue: selected,
+                  onChanged: (serviceQuality? value) {
+                    setState(() {
+                      selected = value;
+                    });
+                  },
+                ),
+              ],
+            ),
+          ),
+          ListTile(
+            leading:
+                Icon(Icons.call_made, color: Color.fromARGB(255, 4, 131, 9)),
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text("Round up tip?"),
+                Switch(
+                    value: switched,
+                    onChanged: (value) {
+                      switched = !switched;
+                      setState(() {});
+                    }),
+              ],
+            ),
+          ),
+          ListTile(
+            leading: SizedBox(),
+            title: MaterialButton(
+              textColor: Color.fromARGB(255, 225, 253, 223),
+              color: Color.fromARGB(255, 4, 131, 9),
+              child: Text("CALCULATE"),
+              onPressed: () {
+                _tipCalculation();
+                setState(() {});
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 15, top: 15),
+            child: Text(
+              "Tip Amount: \$ ${total}",
+              textAlign: TextAlign.end,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _tipCalculation() {
+    double cost = double.parse(costController.text);
+    double cost_service = 0;
+    switch (selected) {
+      case serviceQuality.Amazing:
+        cost_service = cost + cost * .20;
+        break;
+      case serviceQuality.Good:
+        cost_service = cost + cost * .18;
+        break;
+      case serviceQuality.Ok:
+        cost_service = cost + cost * .15;
+        break;
+      default:
+        cost_service = 0;
+    }
+    if (switched) {
+      cost_service.ceil();
+      total = cost_service.ceil().toDouble();
+    } else {
+      total = cost_service;
+    }
+
+    // TODO: completar
+  }
+}
